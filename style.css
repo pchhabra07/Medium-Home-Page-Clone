@@ -1,0 +1,393 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+.top-container{
+    height: 57px;
+    padding: 0px 24px;
+    display: flex;
+    border-bottom: #f2f2f2 solid 1px;
+}
+
+.left-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    width: 80%;
+}
+
+a{
+    text-decoration: none;
+}
+
+.logo_img{
+    height: 25px;
+    width: 112px;
+    background-image: url("./assets/Medium_Logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.search-box{
+    width: 240px;
+    height: 40px;
+    margin: 8px 0px;
+    display: flex;
+    background-color: #f9f9f9;
+    align-items:center;
+    border-radius: 15px;
+}
+
+.search-input{
+    display: inline-block;
+    height: 24px;
+    border: 0px solid #6b6b6b;
+    background-color: #f9f9f9;
+    color: black;
+}
+
+.search-input:focus{
+    outline: none;
+}
+
+.search-icon{
+    margin: 0px 12px;
+    width: 16px;
+    height: 16px;
+    background-image: url("./assets/search_icon.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.right-container{
+    display: flex;
+    align-items: center;
+    width: 20%;
+}
+
+.write-button{
+    width: 97px;
+    height: 24px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.write-icon{
+    width: 24px;
+    height: 24px;
+    background-image: url("./assets/note_icon.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.write-text{
+    font-size: 14px;
+    margin-left: 8px;
+    font-family:  Helvetica, Arial, sans-serif;
+    color: #6b6b6b;
+}
+
+.write-button:hover > .write-icon{
+    width: 24px;
+    height: 24px;
+    background-image: url("./assets/note_icon_black.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.write-button:hover > .write-text{
+    color: black;
+}
+
+.notifications-icon{
+    width: 24px;
+    height: 24px;
+    margin-right: 32px;
+    background-image: url("./assets/notis_icon.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.notifications-icon:hover{
+    width: 24px;
+    height: 24px;
+    margin-right: 32px;
+    background-image: url("./assets/notis_icon_black.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.profile{
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    border-radius: 50%;
+    background-image: url("./assets/profile_pic.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.body{
+    display: flex;
+    width: 100%;
+}
+
+
+.left-page{
+    width: calc(100% - 368px);
+}
+.right-page{
+    width: 303px;
+    border-left: #f2f2f2 solid 1px;
+    padding-left: 40px;
+    padding-right: 24px;
+}
+
+.staff-picks{
+    margin-top: 40px;
+    
+}
+
+.staff-picks-anchor{
+    color: black;
+    
+}
+
+.staff-picks-button{
+    font-family:  medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin-bottom: 24px;
+}
+
+.sample-pick{
+    padding-bottom: 20px;
+}
+
+.profile-container{
+    height: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.profile-pic-anchor,.profile-name-anchor{
+    color: #242424;
+    text-decoration: none;
+}
+
+.profile-pic{
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-image: url("./assets/profile_pic.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.profile-name:hover{
+    color: #242424;
+    text-decoration: underline;
+}
+
+.profile-name{
+    display: inline-block;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #242424;
+}
+
+.pick-title{
+    font-size: 16px;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #242424;
+    margin-bottom: 12px;
+}
+
+.pick-date,.see-full-list{
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #6b6b6b;
+}
+
+.see-full-list:hover{
+    text-decoration: underline;
+}
+
+.recommended-topics{
+    margin-top: 40px;
+    position: sticky;
+    top: -180px;
+}
+
+.recommended-topics-head{
+    font-family:  medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin-bottom: 24px;
+}
+
+.topic-button-container{
+    width: 100%;
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.topic-button-parent{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    background-color: #f2f2f2;
+    border-radius: 100px;
+    color: #242424;
+    font-size: 14px;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 8px 16px;
+    text-wrap: nowrap;
+    margin-bottom: 10px;
+    margin-right: 8px;
+    border: 1px solid #f2f2f2;
+}
+
+.topic-button-anchor{
+    color: #242424;
+}
+
+.see-more-topics{
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #6b6b6b;
+    margin-top: 6px;
+}
+
+.see-more-topics:hover{
+    text-decoration: underline;
+}
+
+.sticky-container{
+    position: sticky;
+    top: 50px;
+}
+
+.who-to-follow{
+    margin-top: 40px;
+}
+
+.who-to-follow-head{
+    font-family:  medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin-bottom: 24px;
+    
+}
+
+.sample-account{
+    height: 64px;
+    width: 100%;
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.account-profile-photo{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-image: url("./assets/profile_pic.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.account-info,.account-photo{
+    height: 100%;
+}
+
+.account-info{
+    margin-left: 16px;
+    margin-right: 8px;
+}
+
+.account-name{
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+
+.account-desc{
+    margin-top: 4px;
+    color: #6b6b6b;
+    font-size: 13px;   
+}
+
+.follow-button{
+    border: solid 1px #242424;
+    color: #242424;
+    border-radius: 99em;
+    height: 32px;
+    text-align: center;
+    padding: 5px 12px;
+}
+
+.follow-button:hover{
+    color: black;
+}
+
+.account-profile-photo:hover,.account-name:hover,.account-desc:hover,.follow-button:hover{
+    cursor: pointer;
+}
+
+.see-more-suggestions{
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #6b6b6b;
+    margin-top: 6px;
+}
+
+.see-more-suggestions:hover{
+    text-decoration: underline;
+}
+
+.reading-list{
+    margin-top: 40px;
+}
+
+.reading-list-head{
+    font-family:  medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    margin-bottom: 24px;
+}
+
+.reading-list-content{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.bookmark-icon{
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+    margin-right: 3px;
+    background-image: url("/assets/bookmark_add_icon.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    
+}
+
+.reading-list-content-text{
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #6b6b6b;
+}
+
+.redirects{
+    padding: 24px 0px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.redirect-buttons{
+    color: #6b6b6b;
+    font-size: 11px;
+    margin-right: 6px;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 16px;
+}
