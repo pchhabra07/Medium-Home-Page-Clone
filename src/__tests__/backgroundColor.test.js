@@ -12,4 +12,4 @@ describe('Background color', () => {
     // Expect a rule like: body { background-color: orange; }
     expect(normalized).toMatch(/body\s*{\s*background-color:\s*orange\s*;?\s*}/i);
   });
-});
+}));
