@@ -268,6 +268,8 @@ a{
 .sticky-container{
     position: sticky;
     top: 50px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .who-to-follow{
@@ -411,15 +413,15 @@ body.dark-mode .search-input {
     background-color: #1e1e1e;
 }
 
-body.dark-mode .write-button:hover > .write-icon {
+body.dark-mode .write-button:hover > .write-icon{
     background-image: url("./assets/note_icon_black.svg");
 }
 
-body.dark-mode .write-button:hover > .write-text {
+body.dark-mode .write-button:hover > .write-text{
     color: white;
 }
 
-body.dark-mode .notifications-icon:hover {
+body.dark-mode .notifications-icon:hover{
     background-image: url("./assets/notis_icon_black.svg");
 }
 
@@ -435,7 +437,7 @@ body.dark-mode .who-to-follow-head,
 body.dark-mode .see-more-suggestions,
 body.dark-mode .reading-list-head,
 body.dark-mode .reading-list-content-text,
-body.dark-mode .redirect-buttons {
+body.dark-mode .redirect-buttons{
     color: #e0e0e0;
 }
 
@@ -443,40 +445,40 @@ body.dark-mode .staff-picks-button:hover,
 body.dark-mode .see-full-list:hover,
 body.dark-mode .see-more-topics:hover,
 body.dark-mode .see-more-suggestions:hover,
-body.dark-mode .redirect-buttons:hover {
+body.dark-mode .redirect-buttons:hover{
     color: white;
     text-decoration: underline;
 }
 
-body.dark-mode .topic-button-parent {
+body.dark-mode .topic-button-parent{
     background-color: #1e1e1e;
     color: #e0e0e0;
     border-color: #333;
 }
 
-body.dark-mode .topic-button-parent:hover {
+body.dark-mode .topic-button-parent:hover{
     background-color: #333;
 }
 
-body.dark-mode .sample-account {
+body.dark-mode .sample-account{
     border-color: #333;
 }
 
 body.dark-mode .account-name,
-body.dark-mode .account-desc {
+body.dark-mode .account-desc{
     color: #e0e0e0;
 }
 
-body.dark-mode .follow-button {
+body.dark-mode .follow-button{
     border-color: #e0e0e0;
     color: #e0e0e0;
 }
 
-body.dark-mode .follow-button:hover {
+body.dark-mode .follow-button:hover{
     background-color: #333;
     color: white;
 }
 
-body.dark-mode .blog-title {
+body.dark-mode .blog-title{
     color: #ffffff;
 }
