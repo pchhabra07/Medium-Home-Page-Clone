@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: ['automation/**']
+  workflow_dispatch:
+    inputs:
+      test_only:
+        description: 'Run test job only'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install beautifulsoup4 pytest
+      
+      - name: Run tests
+        run: pytest tests/ -v

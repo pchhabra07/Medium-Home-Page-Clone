@@ -280,3 +280,64 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+/* Dark mode styles for left page */
+body.dark-mode .navbar {
+    background-color: #121212;
+}
+
+body.dark-mode .navbar-content {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .navbar-pages {
+    color: #e0e0e0;
+}
+
+body.dark-mode .navbar-pages:hover {
+    color: white;
+}
+
+body.dark-mode .current {
+    color: white;
+    border-bottom-color: white;
+}
+
+body.dark-mode .blog-preview {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .blog-desc {
+    color: #e0e0e0;
+}
+
+body.dark-mode .date-of-publish,
+body.dark-mode .claps-num,
+body.dark-mode .comment-num {
+    color: #e0e0e0;
+}
+
+body.dark-mode .member-only-icon {
+    /* Invert the icon for dark mode? We don't have a white version, so we'll leave it as is. */
+    /* Alternatively, we could use a filter, but we'll stick to the requirement. */
+}
+
+body.dark-mode .clap-icon {
+    /* Same as above */
+}
+
+body.dark-mode .comment-icon {
+    /* Same as above */
+}
+
+body.dark-mode .minus-icon {
+    /* Same as above */
+}
+
+body.dark-mode .blog-bookmark-icon {
+    /* Same as above */
+}
+
+body.dark-mode .three-dots {
+    /* Same as above */
+}
