@@ -391,3 +391,12 @@ a{
     font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 16px;
 }
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #121212;
+}
+
+body.dark-mode .blog-title {
+    color: #ffffff;
+}
