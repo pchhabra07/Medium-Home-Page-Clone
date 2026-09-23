@@ -395,6 +395,86 @@ a{
 /* Dark mode styles */
 body.dark-mode {
     background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .top-container {
+    border-color: #333;
+}
+
+body.dark-mode .search-box {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .search-input {
+    color: #e0e0e0;
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .write-button:hover > .write-icon {
+    background-image: url("./assets/note_icon_black.svg");
+}
+
+body.dark-mode .write-button:hover > .write-text {
+    color: white;
+}
+
+body.dark-mode .notifications-icon:hover {
+    background-image: url("./assets/notis_icon_black.svg");
+}
+
+body.dark-mode .right-page {
+    border-left-color: #333;
+}
+
+body.dark-mode .staff-picks-button,
+body.dark-mode .see-full-list,
+body.dark-mode .recommended-topics-head,
+body.dark-mode .see-more-topics,
+body.dark-mode .who-to-follow-head,
+body.dark-mode .see-more-suggestions,
+body.dark-mode .reading-list-head,
+body.dark-mode .reading-list-content-text,
+body.dark-mode .redirect-buttons {
+    color: #e0e0e0;
+}
+
+body.dark-mode .staff-picks-button:hover,
+body.dark-mode .see-full-list:hover,
+body.dark-mode .see-more-topics:hover,
+body.dark-mode .see-more-suggestions:hover,
+body.dark-mode .redirect-buttons:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+body.dark-mode .topic-button-parent {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+body.dark-mode .topic-button-parent:hover {
+    background-color: #333;
+}
+
+body.dark-mode .sample-account {
+    border-color: #333;
+}
+
+body.dark-mode .account-name,
+body.dark-mode .account-desc {
+    color: #e0e0e0;
+}
+
+body.dark-mode .follow-button {
+    border-color: #e0e0e0;
+    color: #e0e0e0;
+}
+
+body.dark-mode .follow-button:hover {
+    background-color: #333;
+    color: white;
 }
 
 body.dark-mode .blog-title {
