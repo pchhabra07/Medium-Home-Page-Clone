@@ -25,9 +25,14 @@ jobs:
         with:
           python-version: '3.x'
       
-      - name: Install dependencies
+      - name: Install Firefox and dependencies
         run: |
-          pip install beautifulsoup4
+          sudo apt-get update
+          sudo apt-get install -y firefox
+      
+      - name: Install Python dependencies
+        run: |
+          pip install beautifulsoup4 selenium
       
       - name: Run tests
         run: |
