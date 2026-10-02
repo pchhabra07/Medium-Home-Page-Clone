@@ -217,7 +217,7 @@ a{
 
 .recommended-topics{
     margin-top: 40px;
-    position: sticky;
+    position: relative;
     top: -180px;
 }
 

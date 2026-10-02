@@ -66,7 +66,7 @@
 }
 
 .new{
-    display: flex;
+    display: block;
     justify-content: flex-start;
 }
 
