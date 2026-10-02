@@ -1,5 +1,6 @@
 import cssutils
 from bs4 import BeautifulSoup
+import re
 
 def is_light_color(color_str):
     """Determine if a CSS color string represents a light color."""
@@ -53,19 +54,52 @@ def selector_matches_rule(selector, rule):
     parts = [part.strip() for part in rule.selectorText.split(',')]
     return selector in parts
 
+def extract_color_from_value(value):
+    """Extract a color from a CSS value string (e.g., from shorthand properties)."""
+    if not value:
+        return None
+    tokens = value.split()
+    for token in reversed(tokens):
+        # Match hex color
+        if re.match(r'^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$', token):
+            return token
+        # Match rgb() color
+        if re.match(r'^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$', token):
+            return token
+    return None
+
 def get_style(sheets, selector):
-    """Get specified CSS properties for a selector from stylesheets."""
+    """Get specified CSS properties for a selector from stylesheets, handling shorthand."""
     style = {}
     for sheet in sheets:
         for rule in sheet:
             if rule.type == cssutils.STYLE_RULE:
                 if selector_matches_rule(selector, rule):
+                    # Check longhand properties first
                     for prop in ['background-color', 'color', 
                                  'border-top-color', 'border-right-color', 
                                  'border-bottom-color', 'border-left-color']:
                         val = rule.style.getPropertyValue(prop)
                         if val:
                             style[prop] = val
+                    # Handle shorthand properties
+                    shorthand_map = {
+                        'background': ['background-color'],
+                        'border': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
+                        'border-top': ['border-top-color'],
+                        'border-right': ['border-right-color'],
+                        'border-bottom': ['border-bottom-color'],
+                        'border-left': ['border-left-color']
+                    }
+                    for shorthand, longhands in shorthand_map.items():
+                        val = rule.style.getPropertyValue(shorthand)
+                        if val:
+                            color = extract_color_from_value(val)
+                            if color:
+                                for lh in longhands:
+                                    # Only set if not already set by longhand (to avoid overriding)
+                                    if lh not in style:
+                                        style[lh] = color
     return style
 
 def get_original_styles():
@@ -95,30 +129,42 @@ def test_regression_structure():
 
 def test_navbar_preserved():
     """Verify Navbar and descendants retain original light theme appearance."""
-    original_sheets = get_original_styles()
-    current_sheets = get_original_styles()  # Current CSS files (may be changed if theme applied)
+    # Expected original Navbar theme-relevant styles (extracted from original CSS)
+    expected_navbar_styles = {
+        '.navbar': {
+            'background-color': 'white'
+        },
+        '.navbar-content': {
+            'border-bottom-color': '#f2f2f2'
+        },
+        '.navbar-pages': {
+            'color': '#6b6b6b'
+        },
+        '.current': {
+            'color': '#242424',
+            'border-bottom-color': '#242424'
+        },
+        '.add-topic-button': {
+            # No explicit background-color or color in normal state; skip if not present
+        },
+        '.new-box': {
+            'background-color': '#1a8917',
+            'color': '#f2f2f2'
+        }
+    }
     
-    navbar_selectors = [
-        '.navbar',
-        '.navbar-content',
-        '.navbar-pages',
-        '.current',
-        '.add-topic-button',
-        '.new-box'
-    ]
+    current_sheets = get_original_styles()
     
-    for selector in navbar_selectors:
-        original_style = get_style(original_sheets, selector)
+    for selector, expected_props in expected_navbar_styles.items():
         current_style = get_style(current_sheets, selector)
-        
-        # Check all theme-relevant properties
-        for prop in ['background-color', 'color', 
-                     'border-top-color', 'border-right-color', 
-                     'border-bottom-color', 'border-left-color']:
-            if prop in original_style:
-                assert prop in current_style, f"Missing property {prop} for {selector} in current CSS"
-                assert original_style[prop] == current_style[prop], \
-                    f"Property {prop} for {selector} changed from {original_style[prop]} to {current_style[prop]}"
+        for prop, expected_value in expected_props.items():
+            # Skip if expected value is empty (meaning we don't expect it to be set)
+            if not expected_value:
+                continue
+            assert prop in current_style, f"Missing property {prop} for {selector} in current CSS"
+            actual_value = current_style[prop]
+            assert actual_value == expected_value, \
+                f"Property {prop} for {selector} expected {expected_value}, got {actual_value}"
 
 def test_top_header_dark():
     """Verify top/header components (outside Navbar) are dark theme."""
@@ -161,7 +207,7 @@ def test_main_body_dark():
     for selector in main_body_selectors:
         current_style = get_style(current_sheets, selector)
         if selector == '.blog-preview':
-            # Check border-color (we'll check bottom as representative)
+            # Check border-color (we'll check all sides)
             for border_prop in ['border-top-color', 'border-right-color', 
                                 'border-bottom-color', 'border-left-color']:
                 if border_prop in current_style:
