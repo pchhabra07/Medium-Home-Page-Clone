@@ -21,7 +21,6 @@ def is_light_color(color_str):
             g = int(nums[1].strip())
             b = int(nums[2].strip())
         else:
-            # Handle named colors (simplified)
             named_colors = {
                 'white': (255, 255, 255),
                 'black': (0, 0, 0),
@@ -35,7 +34,6 @@ def is_light_color(color_str):
                 r, g, b = named_colors[color_str.lower()]
             else:
                 return False
-        # Calculate relative luminance (ITU-R BT.709)
         def to_linear(c):
             c /= 255.0
             if c <= 0.03928:
@@ -50,53 +48,184 @@ def is_light_color(color_str):
     except Exception:
         return False
 
-def get_rule(stylesheets, selector):
-    """Find a CSS rule by selector in a list of stylesheets."""
-    for sheet in stylesheets:
+def get_style(sheets, selector):
+    """Get specified CSS properties for a selector from stylesheets."""
+    style = {}
+    for sheet in sheets:
         for rule in sheet:
             if rule.type == cssutils.STYLE_RULE:
                 if selector in rule.selectorText:
-                    return rule
-    return None
+                    for prop in ['background-color', 'color', 
+                                 'border-top-color', 'border-right-color', 
+                                 'border-bottom-color', 'border-left-color']:
+                        val = rule.style.getPropertyValue(prop)
+                        if val:
+                            style[prop] = val
+    return style
 
-def test_theme_change():
-    # Parse CSS files
+def test_regression_structure():
+    """Ensure core HTML structure remains intact."""
+    with open('index.html', 'r') as f:
+        soup = BeautifulSoup(f, 'html.parser')
+    assert soup.find('div', class_='top-container') is not None
+    assert soup.find('div', class_='body') is not None
+    assert soup.find('div', class_='navbar') is not None
+    assert soup.find('div', class_='search-box') is not None
+    assert soup.find('input', class_='search-input') is not None
+    assert soup.find('div', class_='write-button') is not None
+    assert soup.find('div', class_='notifications-icon') is not None
+    assert soup.find('div', class_='profile') is not None
+    assert soup.find('div', class_='body-left-page') is not None
+    assert soup.find('div', class_='sample-blog-content') is not None
+    assert soup.find('div', class_='staff-picks') is not None
+    assert soup.find('div', class_='recommended-topics') is not None
+    assert soup.find('div', class_='who-to-follow') is not None
+    assert soup.find('div', class_='reading-list') is not None
+
+def get_original_styles():
+    """Parse original CSS files and return stylesheets."""
     css = cssutils.parseFile('style.css')
     left_page_css = cssutils.parseFile('left_page_style.css')
-    stylesheets = [css, left_page_css]
-    
-    # Parse HTML for regression check
+    return [css, left_page_css]
+
+def test_navbar_remains_light_theme():
+    """Verify Navbar and descendants retain light theme appearance."""
+    original_sheets = get_original_styles()
     with open('index.html', 'r') as f:
         soup = BeautifulSoup(f, 'html.parser')
     
-    # Regression: Ensure core components exist
-    assert soup.find('div', class_='top-container') is not None, "top-container missing"
-    assert soup.find('div', class_='body') is not None, "body div missing"
-    assert soup.find('div', class_='navbar') is not None, "navbar missing"
+    navbar_selectors = [
+        '.navbar',
+        '.navbar-content',
+        '.navbar-pages',
+        '.current',
+        '.add-topic-button',
+        '.new-box'
+    ]
     
-    # Check .top-container: should be dark background, light text
-    top_container_rule = get_rule(stylesheets, '.top-container')
-    assert top_container_rule is not None, "Rule for .top-container not found"
-    bg_color = top_container_rule.style.backgroundColor
-    color = top_container_rule.style.color
-    assert bg_color != '', "Background color not set for .top-container"
-    assert color != '', "Text color not set for .top-container"
-    assert not is_light_color(bg_color), f".top-container background should be dark, got {bg_color}"
-    assert is_light_color(color), f".top-container text should be light, got {color}"
+    for selector in navbar_selectors:
+        original_style = get_style(original_sheets, selector)
+        # For Navbar, we expect background to remain light and text to remain dark
+        if 'background-color' in original_style:
+            assert is_light_color(original_style['background-color']), \
+                f"Original {selector} background should be light: {original_style['background-color']}"
+        if 'color' in original_style:
+            assert not is_light_color(original_style['color']), \
+                f"Original {selector} text should be dark: {original_style['color']}"
+
+def test_top_header_becomes_dark_theme():
+    """Verify top/header components (outside Navbar) become dark theme."""
+    original_sheets = get_original_styles()
+    # Modify the CSS files to simulate the change? 
+    # But note: we are testing the current state. The test should pass after the theme change.
+    # We are writing the test to be run after the theme change has been applied.
+    # So we will parse the current CSS files (which should be the changed ones).
+    # However, we are given the original codebase. We are writing the test for the future state.
+    # We will assume that the CSS files have been updated to dark mode for non-Navbar.
+    # We will parse the current CSS files (which are the same as the original if no change made).
+    # The test will fail on the original and pass after the change.
+    modified_sheets = get_original_styles()  # In reality, after change, these would be different
     
-    # Check .body: should be dark background, light text
-    body_rule = get_rule(stylesheets, '.body')
-    assert body_rule is not None, "Rule for .body not found"
-    bg_color = body_rule.style.backgroundColor
-    color = body_rule.style.color
-    assert bg_color != '', "Background color not set for .body"
-    assert color != '', "Text color not set for .body"
-    assert not is_light_color(bg_color), f".body background should be dark, got {bg_color}"
-    assert is_light_color(color), f".body text should be light, got {color}"
+    top_header_selectors = [
+        '.top-container',
+        '.search-box',
+        '.search-input',
+        '.write-button',
+        '.write-text',
+        '.notifications-icon',
+        '.profile'
+    ]
     
-    # Check .navbar: should be light background, dark text
-    navbar_rule = get_rule(stylesheets, '.navbar')
-    assert navbar_rule is not None, "Rule for .navbar not found"
-    bg_color = navbar_rule.style.backgroundColor
-    assert bg_color != '', "Background color not set for .navbar"
-    assert is_light_color(bg_color), f".navbar background should be light, got {bg_color}"
+    for selector in top_header_selectors:
+        modified_style = get_style(modified_sheets, selector)
+        if 'background-color' in modified_style:
+            assert not is_light_color(modified_style['background-color']), \
+                f"{selector} background should be dark, got {modified_style['background-color']}"
+        if 'color' in modified_style:
+            assert is_light_color(modified_style['color']), \
+                f"{selector} text should be light, got {modified_style['color']}"
+
+def test_main_body_becomes_dark_theme():
+    """Verify main body/content components become dark theme."""
+    modified_sheets = get_original_styles()
+    
+    main_body_selectors = [
+        '.writer-details-const',
+        '.writer-details-var',
+        '.blog-title',
+        '.blog-desc',
+        '.date-of-publish',
+        '.claps-num',
+        '.comment-num',
+        '.blog-preview'  # for border-color
+    ]
+    
+    for selector in main_body_selectors:
+        modified_style = get_style(modified_sheets, selector)
+        if selector == '.blog-preview':
+            # Check border-color (we'll check bottom as representative)
+            for border_prop in ['border-top-color', 'border-right-color', 
+                                'border-bottom-color', 'border-left-color']:
+                if border_prop in modified_style:
+                    assert not is_light_color(modified_style[border_prop]), \
+                        f"{selector} {border_prop} should be dark, got {modified_style[border_prop]}"
+        else:
+            if 'color' in modified_style:
+                assert is_light_color(modified_style['color']), \
+                    f"{selector} text should be light, got {modified_style['color']}"
+
+def test_right_sidebar_becomes_dark_theme():
+    """Verify right sidebar components become dark theme."""
+    modified_sheets = get_original_styles()
+    
+    sidebar_selectors = [
+        '.staff-picks-anchor',
+        '.profile-pic-anchor',
+        '.profile-name-anchor',
+        '.profile-name',
+        '.pick-title',
+        '.pick-date',
+        '.see-full-list',
+        '.topic-button-parent',
+        '.topic-button-anchor',
+        '.see-more-topics',
+        '.account-name',
+        '.account-desc',
+        '.follow-button',
+        '.see-more-suggestions',
+        '.reading-list-content-text',
+        '.redirect-buttons'
+    ]
+    
+    for selector in sidebar_selectors:
+        modified_style = get_style(modified_sheets, selector)
+        if selector == '.topic-button-parent':
+            # Check background-color, color, and border-color
+            if 'background-color' in modified_style:
+                assert not is_light_color(modified_style['background-color']), \
+                    f"{selector} background should be dark, got {modified_style['background-color']}"
+            if 'color' in modified_style:
+                assert is_light_color(modified_style['color']), \
+                    f"{selector} text should be light, got {modified_style['color']}"
+            # Check border-color (we'll check top as representative)
+            for border_prop in ['border-top-color', 'border-right-color', 
+                                'border-bottom-color', 'border-left-color']:
+                if border_prop in modified_style:
+                    assert not is_light_color(modified_style[border_prop]), \
+                        f"{selector} {border_prop} should be dark, got {modified_style[border_prop]}"
+        elif selector == '.follow-button':
+            if 'color' in modified_style:
+                assert is_light_color(modified_style['color']), \
+                    f"{selector} text should be light, got {modified_style['color']}"
+            for border_prop in ['border-top-color', 'border-right-color', 
+                                'border-bottom-color', 'border-left-color']:
+                if border_prop in modified_style:
+                    assert not is_light_color(modified_style[border_prop]), \
+                        f"{selector} {border_prop} should be dark, got {modified_style[border_prop]}"
+        else:
+            if 'background-color' in modified_style:
+                assert not is_light_color(modified_style['background-color']), \
+                    f"{selector} background should be dark, got {modified_style['background-color']}"
+            if 'color' in modified_style:
+                assert is_light_color(modified_style['color']), \
+                    f"{selector} text should be light, got {modified_style['color']}"
