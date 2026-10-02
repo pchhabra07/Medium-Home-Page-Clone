@@ -135,7 +135,7 @@ a{
 
 
 .left-page{
-    width: calc(100% - 368px);
+    flex: 1;
 }
 .right-page{
     width: 303px;
