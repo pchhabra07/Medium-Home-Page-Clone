@@ -27,5 +27,5 @@ jobs:
         run: |
           pip install beautifulsoup4 cssutils pytest
       - name: Run tests
-      run: |
-        pytest tests/test_theme.py -v
+        run: |
+          pytest tests/test_theme.py -v
