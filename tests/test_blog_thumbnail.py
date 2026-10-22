@@ -26,6 +26,35 @@ def _get_base_blog_thumbnail_style():
     return None
 
 
+def _count_base_blog_thumbnail_rules():
+    """Return the number of exact `.blog-thumbnail` style rules in the CSS file.
+
+    Only the base selector `.blog-thumbnail` is counted. Compound or
+    pseudo-class selectors (e.g. `.blog-thumbnail:hover`) are excluded.
+    """
+    with open(CSS_FILE, 'r', encoding='utf-8') as f:
+        css_content = f.read()
+    stylesheet = cssutils.parseString(css_content)
+    count = 0
+    for rule in stylesheet:
+        if (
+            rule.type == rule.STYLE_RULE
+            and rule.selectorText.strip() == '.blog-thumbnail'
+        ):
+            count += 1
+    return count
+
+
+def test_blog_thumbnail_rule_is_unique():
+    """Assert that exactly one base `.blog-thumbnail` rule exists.
+
+    Duplicate rules can silently introduce conflicting dimensions, so the
+    count must be exactly one.
+    """
+    count = _count_base_blog_thumbnail_rules()
+    assert count == 1, f"Expected exactly one .blog-thumbnail rule, found {count}"
+
+
 def test_blog_thumbnail_height_is_180px():
     style = _get_base_blog_thumbnail_style()
     assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
