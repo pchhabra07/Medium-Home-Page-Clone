@@ -7,39 +7,37 @@ CSS_FILE = os.path.join(BASE_DIR, 'left_page_style.css')
 HTML_FILE = os.path.join(BASE_DIR, 'index.html')
 
 
-def _get_blog_thumbnail_styles():
-    """Return all CSS style declarations for rules matching .blog-thumbnail.
+def _get_base_blog_thumbnail_style():
+    """Return the style declaration for the exact `.blog-thumbnail` rule.
 
-    Matches both exact `.blog-thumbnail` selectors and compound selectors
-    containing `.blog-thumbnail` (e.g. `.blog-thumbnail:hover`) to surface
-    potentially conflicting rules.
+    Only the base selector `.blog-thumbnail` is matched. Compound or
+    pseudo-class selectors (e.g. `.blog-thumbnail:hover`) are excluded so
+    they are not mistaken for the base rule or treated as overrides.
     """
     with open(CSS_FILE, 'r', encoding='utf-8') as f:
         css_content = f.read()
     stylesheet = cssutils.parseString(css_content)
-    styles = []
     for rule in stylesheet:
-        if rule.type == rule.STYLE_RULE and '.blog-thumbnail' in rule.selectorText:
-            styles.append(rule.style)
-    return styles
+        if (
+            rule.type == rule.STYLE_RULE
+            and rule.selectorText.strip() == '.blog-thumbnail'
+        ):
+            return rule.style
+    return None
 
 
 def test_blog_thumbnail_height_is_180px():
-    styles = _get_blog_thumbnail_styles()
-    assert len(styles) > 0, ".blog-thumbnail CSS rule must exist in left_page_style.css"
-    height_rules = [s for s in styles if 'height' in s]
-    assert len(height_rules) > 0, "height property must be explicitly set for .blog-thumbnail"
-    for style in height_rules:
-        assert style['height'] == '180px', f"Expected height 180px, got {style['height']}"
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'height' in style, "height property must be explicitly set for .blog-thumbnail"
+    assert style['height'] == '180px', f"Expected height 180px, got {style['height']}"
 
 
 def test_blog_thumbnail_width_is_180px():
-    styles = _get_blog_thumbnail_styles()
-    assert len(styles) > 0, ".blog-thumbnail CSS rule must exist in left_page_style.css"
-    width_rules = [s for s in styles if 'width' in s]
-    assert len(width_rules) > 0, "width property must be explicitly set for .blog-thumbnail"
-    for style in width_rules:
-        assert style['width'] == '180px', f"Expected width 180px, got {style['width']}"
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'width' in style, "width property must be explicitly set for .blog-thumbnail"
+    assert style['width'] == '180px', f"Expected width 180px, got {style['width']}"
 
 
 def test_blog_thumbnail_elements_exist_in_html():
@@ -51,9 +49,7 @@ def test_blog_thumbnail_elements_exist_in_html():
 
 
 def test_blog_thumbnail_preserves_background_image():
-    styles = _get_blog_thumbnail_styles()
-    assert len(styles) > 0, ".blog-thumbnail CSS rule must exist in left_page_style.css"
-    bg_rules = [s for s in styles if 'background-image' in s]
-    assert len(bg_rules) > 0, "background-image must be explicitly set for .blog-thumbnail"
-    for style in bg_rules:
-        assert 'profile_pic.jpg' in style['background-image'], "background-image should reference profile_pic.jpg"
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'background-image' in style, "background-image must be explicitly set for .blog-thumbnail"
+    assert 'profile_pic.jpg' in style['background-image'], "background-image should reference profile_pic.jpg"
