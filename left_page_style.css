@@ -274,8 +274,8 @@
 }
 
 .blog-thumbnail{
-    height: 160px;
-    width: 160px;
+    height: 180px;
+    width: 180px;
     background-image: url("/assets/profile_pic.jpg");
     background-repeat: no-repeat;
     background-size: contain;

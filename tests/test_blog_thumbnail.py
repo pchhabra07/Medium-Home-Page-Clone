@@ -1,0 +1,84 @@
+import os
+import cssutils
+from bs4 import BeautifulSoup
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CSS_FILE = os.path.join(BASE_DIR, 'left_page_style.css')
+HTML_FILE = os.path.join(BASE_DIR, 'index.html')
+
+
+def _get_base_blog_thumbnail_style():
+    """Return the style declaration for the exact `.blog-thumbnail` rule.
+
+    Only the base selector `.blog-thumbnail` is matched. Compound or
+    pseudo-class selectors (e.g. `.blog-thumbnail:hover`) are excluded so
+    they are not mistaken for the base rule or treated as overrides.
+    """
+    with open(CSS_FILE, 'r', encoding='utf-8') as f:
+        css_content = f.read()
+    stylesheet = cssutils.parseString(css_content)
+    for rule in stylesheet:
+        if (
+            rule.type == rule.STYLE_RULE
+            and rule.selectorText.strip() == '.blog-thumbnail'
+        ):
+            return rule.style
+    return None
+
+
+def _count_base_blog_thumbnail_rules():
+    """Return the number of exact `.blog-thumbnail` style rules in the CSS file.
+
+    Only the base selector `.blog-thumbnail` is counted. Compound or
+    pseudo-class selectors (e.g. `.blog-thumbnail:hover`) are excluded.
+    """
+    with open(CSS_FILE, 'r', encoding='utf-8') as f:
+        css_content = f.read()
+    stylesheet = cssutils.parseString(css_content)
+    count = 0
+    for rule in stylesheet:
+        if (
+            rule.type == rule.STYLE_RULE
+            and rule.selectorText.strip() == '.blog-thumbnail'
+        ):
+            count += 1
+    return count
+
+
+def test_blog_thumbnail_rule_is_unique():
+    """Assert that exactly one base `.blog-thumbnail` rule exists.
+
+    Duplicate rules can silently introduce conflicting dimensions, so the
+    count must be exactly one.
+    """
+    count = _count_base_blog_thumbnail_rules()
+    assert count == 1, f"Expected exactly one .blog-thumbnail rule, found {count}"
+
+
+def test_blog_thumbnail_height_is_180px():
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'height' in style, "height property must be explicitly set for .blog-thumbnail"
+    assert style['height'] == '180px', f"Expected height 180px, got {style['height']}"
+
+
+def test_blog_thumbnail_width_is_180px():
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'width' in style, "width property must be explicitly set for .blog-thumbnail"
+    assert style['width'] == '180px', f"Expected width 180px, got {style['width']}"
+
+
+def test_blog_thumbnail_elements_exist_in_html():
+    with open(HTML_FILE, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+    soup = BeautifulSoup(html_content, 'html.parser')
+    thumbnails = soup.find_all('div', class_='blog-thumbnail')
+    assert len(thumbnails) > 0, "At least one div with class 'blog-thumbnail' must exist in index.html"
+
+
+def test_blog_thumbnail_preserves_background_image():
+    style = _get_base_blog_thumbnail_style()
+    assert style is not None, ".blog-thumbnail CSS rule must exist in left_page_style.css"
+    assert 'background-image' in style, "background-image must be explicitly set for .blog-thumbnail"
+    assert 'profile_pic.jpg' in style['background-image'], "background-image should reference profile_pic.jpg"
