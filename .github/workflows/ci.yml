@@ -2,40 +2,20 @@ name: CI
 
 on:
   push:
-    branches: ['automation/**']
+    paths:
+      - 'automation/**'
   workflow_dispatch:
-    inputs:
-      test_only:
-        description: 'Run test job only'
-        required: false
-        default: 'false'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-
+          python-version: '3.x'
       - name: Install dependencies
-        run: |
-          npm install
-          pip install pytest
-
-      - name: Execute tests
-        run: |
-          pytest tests/test_blog_thumbnail.py
+        run: pip install pytest cssutils beautifulsoup4
+      - name: Run tests
+        run: pytest
