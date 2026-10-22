@@ -8,13 +8,18 @@ HTML_FILE = os.path.join(BASE_DIR, 'index.html')
 
 
 def _get_blog_thumbnail_styles():
-    """Return all CSS style declarations for .blog-thumbnail rules."""
+    """Return all CSS style declarations for rules matching .blog-thumbnail.
+
+    Matches both exact `.blog-thumbnail` selectors and compound selectors
+    containing `.blog-thumbnail` (e.g. `.blog-thumbnail:hover`) to surface
+    potentially conflicting rules.
+    """
     with open(CSS_FILE, 'r', encoding='utf-8') as f:
         css_content = f.read()
     stylesheet = cssutils.parseString(css_content)
     styles = []
     for rule in stylesheet:
-        if rule.type == rule.STYLE_RULE and rule.selectorText == '.blog-thumbnail':
+        if rule.type == rule.STYLE_RULE and '.blog-thumbnail' in rule.selectorText:
             styles.append(rule.style)
     return styles
 
